@@ -514,7 +514,7 @@ public class ConversationActivity extends PassphraseRequiredActionBarActivity
       @Override
       public void onClick(DialogInterface dialog, int which) {
         if (!isEncryptedConversation){
-          KeyExchangeInitiator.initiate(ConversationActivity.this, masterSecret, recipients, true, subscriptionId);
+          KeyExchangeInitiator.initiate(ConversationActivity.this, masterSecret, recipients, true);
         }
         long allocatedThreadId;
         if (threadId == -1) {

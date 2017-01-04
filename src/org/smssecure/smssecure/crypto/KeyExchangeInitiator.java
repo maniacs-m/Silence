@@ -20,6 +20,9 @@ package org.smssecure.smssecure.crypto;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.Build;
+import android.telephony.SubscriptionInfo;
+import android.telephony.SubscriptionManager;
 
 import org.smssecure.smssecure.R;
 import org.smssecure.smssecure.crypto.storage.SilenceIdentityKeyStore;
@@ -41,9 +44,22 @@ import org.whispersystems.libaxolotl.state.SessionRecord;
 import org.whispersystems.libaxolotl.state.SessionStore;
 import org.whispersystems.libaxolotl.state.SignedPreKeyStore;
 
+import java.util.List;
+
 public class KeyExchangeInitiator {
 
-  public static void initiate(final Context context, final MasterSecret masterSecret, final Recipients recipients, boolean promptOnExisting, final int subscriptionId) {
+  public static void initiate(final Context context, final MasterSecret masterSecret, final Recipients recipients, boolean promptOnExisting) {
+    if (Build.VERSION.SDK_INT >= 22) {
+      List<SubscriptionInfo> listSubscriptionInfo = SubscriptionManager.from(context).getActiveSubscriptionInfoList();
+      for (SubscriptionInfo subscriptionInfo : listSubscriptionInfo) {
+        initiate(context, masterSecret, recipients, promptOnExisting, subscriptionInfo.getSubscriptionId());
+      }
+    } else {
+      initiate(context, masterSecret, recipients, promptOnExisting, -1);
+    }
+  }
+
+  private static void initiate(final Context context, final MasterSecret masterSecret, final Recipients recipients, boolean promptOnExisting, final int subscriptionId) {
     if (promptOnExisting && hasInitiatedSession(context, masterSecret, recipients)) {
       AlertDialog.Builder dialog = new AlertDialog.Builder(context);
       dialog.setTitle(R.string.KeyExchangeInitiator_initiate_despite_existing_request_question);
