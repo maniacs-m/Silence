@@ -25,11 +25,11 @@ public class SilenceAxolotlStore implements AxolotlStore {
   private final IdentityKeyStore  identityKeyStore;
   private final SessionStore      sessionStore;
 
-  public SilenceAxolotlStore(Context context, MasterSecret masterSecret) {
+  public SilenceAxolotlStore(Context context, MasterSecret masterSecret, int subscriptionId) {
     this.preKeyStore       = new SilencePreKeyStore(context, masterSecret);
     this.signedPreKeyStore = new SilencePreKeyStore(context, masterSecret);
-    this.identityKeyStore  = new SilenceIdentityKeyStore(context, masterSecret);
-    this.sessionStore      = new SilenceSessionStore(context, masterSecret);
+    this.identityKeyStore  = new SilenceIdentityKeyStore(context, masterSecret, subscriptionId);
+    this.sessionStore      = new SilenceSessionStore(context, masterSecret, subscriptionId);
   }
 
   @Override
